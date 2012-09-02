@@ -314,7 +314,6 @@ class ModelResource(FormResource):
                 d = {}
                 d.update(model_to_dict(self.view.model_instance))
                 d.update([(k,v) for k,v in data.iteritems()])
-                print d
                 # Bound to an existing model instance
                 return form(d, files, instance=self.view.model_instance)
             else:
