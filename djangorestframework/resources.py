@@ -3,7 +3,7 @@ from django import forms
 from djangorestframework.response import ErrorResponse
 from djangorestframework.serializer import Serializer
 from djangorestframework.utils import as_tuple
-
+from django.forms.models import model_to_dict
 
 class BaseResource(Serializer):
     """
@@ -311,8 +311,12 @@ class ModelResource(FormResource):
         # Instantiate the ModelForm as appropriate
         if data is not None or files is not None:
             if issubclass(form, forms.ModelForm) and hasattr(self.view, 'model_instance'):
+                d = {}
+                d.update(model_to_dict(self.view.model_instance))
+                d.update([(k,v) for k,v in data.iteritems()])
+                print d
                 # Bound to an existing model instance
-                return form(data, files, instance=self.view.model_instance)
+                return form(d, files, instance=self.view.model_instance)
             else:
                 return form(data, files)
 
